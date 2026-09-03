@@ -10,13 +10,13 @@ export default function QuizAttempt() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // ✅ Memoize questions to keep the reference stable
+  // ✅ Memoize questions so reference is stable
   const questions = useMemo(() => quizQuestions[id] || [], [id]);
 
   const meta = assessments.find((a) => String(a.id) === String(id));
 
   const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState({}); // { questionIndex: optionIndex }
+  const [answers, setAnswers] = useState({});
   const [secondsLeft, setSecondsLeft] = useState(QUIZ_SECONDS);
   const [confirmingSubmit, setConfirmingSubmit] = useState(false);
 
@@ -42,12 +42,8 @@ export default function QuizAttempt() {
   if (questions.length === 0) {
     return (
       <div className="container py-5 text-center">
-        <p className="text-muted">
-          No quiz content is available for this assessment yet.
-        </p>
-        <Link to="/assessments" className="btn btn-outline-primary">
-          Back to Assessments
-        </Link>
+        <p className="text-muted">No quiz content is available for this assessment yet.</p>
+        <Link to="/assessments" className="btn btn-outline-primary">Back to Assessments</Link>
       </div>
     );
   }
@@ -60,15 +56,10 @@ export default function QuizAttempt() {
   return (
     <div className="container py-4" style={{ maxWidth: 800 }}>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <Link
-          to="/assessments"
-          className="btn btn-link text-decoration-none ps-0"
-        >
+        <Link to="/assessments" className="btn btn-link text-decoration-none ps-0">
           <FaArrowLeft className="me-1" /> Exit Quiz
         </Link>
-        <div
-          className={`d-flex align-items-center gap-2 fw-bold ${secondsLeft < 60 ? "text-danger" : "text-primary"}`}
-        >
+        <div className={`d-flex align-items-center gap-2 fw-bold ${secondsLeft < 60 ? "text-danger" : "text-primary"}`}>
           <FaClock /> {mins}:{secs}
         </div>
       </div>
@@ -79,10 +70,7 @@ export default function QuizAttempt() {
       </p>
 
       <div className="progress mb-4" style={{ height: 6 }}>
-        <div
-          className="progress-bar"
-          style={{ width: `${((current + 1) / questions.length) * 100}%` }}
-        />
+        <div className="progress-bar" style={{ width: `${((current + 1) / questions.length) * 100}%` }} />
       </div>
 
       <div className="card p-4 mb-4">
@@ -99,9 +87,7 @@ export default function QuizAttempt() {
                 name={`q-${current}`}
                 className="form-check-input m-0"
                 checked={answers[current] === i}
-                onChange={() =>
-                  setAnswers((prev) => ({ ...prev, [current]: i }))
-                }
+                onChange={() => setAnswers((prev) => ({ ...prev, [current]: i }))}
               />
               <span className="small">{opt}</span>
             </label>
@@ -133,17 +119,11 @@ export default function QuizAttempt() {
           Previous
         </button>
         {current < questions.length - 1 ? (
-          <button
-            className="btn btn-primary"
-            onClick={() => setCurrent((c) => c + 1)}
-          >
+          <button className="btn btn-primary" onClick={() => setCurrent((c) => c + 1)}>
             Next
           </button>
         ) : (
-          <button
-            className="btn btn-success"
-            onClick={() => setConfirmingSubmit(true)}
-          >
+          <button className="btn btn-success" onClick={() => setConfirmingSubmit(true)}>
             Submit Quiz
           </button>
         )}
